@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { parseChangelog } from './changelog.js';
 export async function runCheck(options) {
-    const { rootPath, format } = options;
+    const { rootPath } = options;
     const findings = [];
     const packageJsonPath = join(rootPath, 'package.json');
     const changelogPath = join(rootPath, 'CHANGELOG.md');
