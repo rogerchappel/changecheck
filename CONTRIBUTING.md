@@ -1,79 +1,35 @@
-# Contributing
+# Contributing to ChangeCheck
 
-Thanks for helping improve `/tmp/changecheck`.
+Thanks for caring! Here's how to jump in.
 
-This project values small, reviewable contributions with clear verification.
+## Ground Rules
 
-## Issues
+- Be kind. Be clear. Be concise.
+- Changes should be small, atomic, and reversible.
+- Every code change should include tests or a fixture.
 
-Before opening an issue:
+## How to Contribute
 
-- Search existing issues.
-- Confirm the issue applies to `/tmp/changecheck`.
-- Include enough context for maintainers to understand or reproduce the request.
+1. Fork the repo and create a branch from `main`.
+2. Make your fix, feature, or doc improvement.
+3. Run the checks: `npm run build && npm test && npm run smoke`.
+4. Commit with a descriptive message.
+5. Open a pull request against `main`.
 
-Bug reports should include:
+## Reporting Bugs
 
-- What happened.
-- What you expected.
-- Steps to reproduce.
-- Relevant logs, screenshots, or files.
-- The smallest verification step that demonstrates the issue.
+Use the [issue template](.github/pull_request_template.md) and include:
+- Expected vs actual behavior
+- Steps to reproduce
+- Output from the CLI
 
-Feature requests should include:
+## Development Workflow
 
-- The use case.
-- Why the current project does not solve it.
-- Risks or compatibility concerns.
-- Suggested files or behavior that may need to change.
-
-## Pull Requests
-
-Pull requests should:
-
-- Focus on one reviewable intent.
-- Use a branch.
-- Follow Conventional Commits.
-- Include tests or verification appropriate to the change.
-- Update documentation when behavior or usage changes.
-- Avoid unrelated formatting or dependency churn.
-- Avoid secrets, private contact details, and project-specific sensitive information.
-
-## Review Pack
-
-Use this format for meaningful changes:
-
-```md
-## Review Pack
-Repo:
-Branch:
-PR:
-Task:
-Status: done / blocked / needs review
-Summary:
-Commits:
-Files changed:
-Verification:
-Risk level:
-Rollback plan:
-Human decision needed:
-Next recommended task:
+```bash
+npm install
+npm run build
+npm test
+npm run smoke
 ```
 
-## Verification
-
-Every contribution should include verification.
-
-Examples:
-
-- Documentation: inspect rendered Markdown or review the diff.
-- Tests: run the targeted test command.
-- Types: run the project typecheck.
-- Build: run the smallest build command that covers the change.
-- Manual QA: provide exact steps and observed result.
-
-If verification cannot be run, explain why and provide the exact command maintainers should run.
-
-## Maintainer Review
-
-Maintainers may request narrower scope, clearer verification, additional tests, or safer defaults before merging.
+Happy building! 🧭

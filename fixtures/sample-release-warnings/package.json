@@ -1,0 +1,5 @@
+{
+  "name": "sample-release-warnings",
+  "version": "2.0.0",
+  "description": "Fixture: version conflicts trigger warnings"
+}

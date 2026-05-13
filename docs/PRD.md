@@ -1,6 +1,6 @@
 # ChangeCheck PRD
 
-Status: in-progress
+Status: complete
 
 ## Pitch
 
@@ -62,7 +62,3 @@ changecheck explain ./demo
 ## Source attribution
 
 Inspired by release tooling and conventional changelog workflows, reframed as a deterministic pre-release audit CLI.
-
-## Agent Prompt
-
-Build a polished local-first OSS CLI named `changecheck`. Use StackForge scaffolding, keep the implementation deterministic and fixture-backed, add practical docs with personality, and publish a public GitHub repo under `rogerchappel/changecheck` after local verification.

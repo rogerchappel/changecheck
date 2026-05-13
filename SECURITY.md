@@ -2,57 +2,21 @@
 
 ## Supported Versions
 
-Replace this section with the supported versions for `/tmp/changecheck`.
-
-Example:
-
-```md
-| Version | Supported |
-| --- | --- |
-| .x | Yes |
-| < .0 | No |
-```
-
-If the project does not publish versioned releases yet, say that clearly.
+| Version | Supported          |
+| ------- | ------------------ |
+| 0.x     | :white_check_mark: |
 
 ## Reporting a Vulnerability
 
-Please do not report suspected vulnerabilities in public issues, pull requests, or discussions.
-
-Ask maintainers for the private security reporting path before sharing details.
-
-If no private reporting path exists yet, ask maintainers through public project channels for a private reporting path. Do not include exploit details, secrets, personal data, or sensitive technical details in public messages.
-
-## What to Include
-
-When a private reporting path is available, include:
-
-- A clear description of the issue.
-- Affected versions, files, packages, workflows, or configuration.
-- Steps to reproduce, proof of concept, or attack scenario when safe to share.
-- Potential impact.
-- Suggested mitigation, if known.
-
-## Response Expectations
-
-Maintainers review good-faith reports as capacity allows.
-
-Do not imply paid support, guaranteed response times, guaranteed fixes, or service-level agreements unless `/tmp/changecheck` explicitly provides them.
+Please responsibly disclose any security concerns to the maintainer via GitHub issues or direct message. Do not file a public issue describing a vulnerability in detail.
 
 ## Scope
 
-In scope:
+ChangeCheck is a local-only tool. It makes no network calls. If you suspect telemetry or outbound traffic, file a report immediately.
 
-- Vulnerabilities in /tmp/changecheck.
-- Insecure default configuration shipped by this project.
-- CI, release, or dependency guidance maintained by this project.
+## Expectations
 
-Out of scope:
+- You'll receive acknowledgement within 7 days.
+- Critical fixes will be patched as soon as possible.
 
-- General support requests.
-- Requests for guaranteed maintenance timelines.
-- Issues in unrelated downstream projects.
-
-## Disclosure
-
-Coordinate disclosure with maintainers before publishing vulnerability details.
+Thank you for keeping this tool safe! 🧭
