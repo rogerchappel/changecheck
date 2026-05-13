@@ -1,5 +1,3 @@
-import type { Stats } from 'node:fs';
-
 export interface ReleaseFindings {
   findings: Finding[];
   summary: FindingsSummary;

@@ -4,7 +4,7 @@ import { parseChangelog } from './changelog.js';
 import type { CheckOptions, CheckResult, Finding } from './types.js';
 
 export async function runCheck(options: CheckOptions): Promise<CheckResult> {
-  const { rootPath, format } = options;
+  const { rootPath } = options;
   const findings: Finding[] = [];
 
   const packageJsonPath = join(rootPath, 'package.json');
