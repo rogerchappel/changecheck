@@ -42,7 +42,7 @@ export async function runCheck(options: CheckOptions): Promise<CheckResult> {
     }
   } catch {
     findings.push({
-      severity: 'warning',
+      severity: 'error',
       category: 'changelog',
       message: 'Missing or unreadable CHANGELOG.md',
       details: changelogPath,
