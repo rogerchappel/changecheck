@@ -9,7 +9,8 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "engines": {
     "node": ">=18"
@@ -21,7 +22,8 @@
     "lint": "eslint .",
     "test": "node --test dist/__tests__/*.test.js",
     "smoke": "node dist/cli.js check fixtures/sample-release --format text",
-    "release:check": "npm test && npm run build && npm run smoke"
+    "release:check": "npm test && npm run build && npm run smoke",
+    "package:smoke": "npm pack --dry-run"
   },
   "keywords": [
     "changelog",
@@ -45,5 +47,13 @@
   },
   "dependencies": {
     "commander": "^14.0.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogerchappel/changecheck.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rogerchappel/changecheck/issues"
+  },
+  "homepage": "https://github.com/rogerchappel/changecheck#readme"
 }
