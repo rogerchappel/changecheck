@@ -45,5 +45,13 @@
   },
   "dependencies": {
     "commander": "^14.0.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogerchappel/changecheck.git"
+  },
+  "homepage": "https://github.com/rogerchappel/changecheck#readme",
+  "bugs": {
+    "url": "https://github.com/rogerchappel/changecheck/issues"
   }
 }
