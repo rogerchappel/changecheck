@@ -95,7 +95,8 @@ npm run build       # TypeScript → dist/
 npm run check       # TypeScript type-check (no emit)
 npm test            # Run tests via node --test
 npm run smoke       # Run a real CLI smoke against fixture
-npm run release:check  # Run all checks in sequence
+npm run package:smoke  # Preview the npm package contents
+npm run release:check  # Run all checks and package smoke in sequence
 bash scripts/validate.sh  # Full validation pipeline
 ```
 

@@ -9,7 +9,9 @@
   },
   "files": [
     "dist",
-    "README.md"
+    "README.md",
+    "LICENSE",
+    "SECURITY.md"
   ],
   "engines": {
     "node": ">=18"
@@ -21,7 +23,8 @@
     "lint": "eslint .",
     "test": "node --test dist/__tests__/*.test.js",
     "smoke": "node dist/cli.js check fixtures/sample-release --format text",
-    "release:check": "npm test && npm run build && npm run smoke"
+    "package:smoke": "npm pack --dry-run",
+    "release:check": "npm run check && npm run build && npm test && npm run smoke && npm run package:smoke"
   },
   "keywords": [
     "changelog",
