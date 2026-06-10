@@ -108,6 +108,20 @@ bash scripts/validate.sh  # Full validation pipeline
 - **Safe defaults**: Dry-run first, no destructive writes.
 - **Agent-friendly**: Structured JSON and clear exit codes for LLM workflows.
 
+## Development
+
+Use Node.js 20 or newer. Run the same checks locally before opening a PR:
+
+```sh
+npm run build
+npm run check
+npm run lint
+npm test
+npm run smoke
+npm run package:smoke
+npm run release:check
+```
+
 ## License
 
 MIT — see [LICENSE](./LICENSE).
