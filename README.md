@@ -95,8 +95,8 @@ npm run build       # TypeScript → dist/
 npm run check       # TypeScript type-check (no emit)
 npm test            # Run tests via node --test
 npm run smoke       # Run a real CLI smoke against fixture
-npm run package:smoke  # Inspect npm tarball contents
-npm run release:check  # Run all checks in sequence
+npm run package:smoke  # Preview the npm package contents
+npm run release:check  # Run all checks and package smoke in sequence
 bash scripts/validate.sh  # Full validation pipeline
 ```
 
@@ -107,6 +107,20 @@ bash scripts/validate.sh  # Full validation pipeline
 - **Fixture-backed**: Test against real directories, not stubs.
 - **Safe defaults**: Dry-run first, no destructive writes.
 - **Agent-friendly**: Structured JSON and clear exit codes for LLM workflows.
+
+## Development
+
+Use Node.js 20 or newer. Run the same checks locally before opening a PR:
+
+```sh
+npm run build
+npm run check
+npm run lint
+npm test
+npm run smoke
+npm run package:smoke
+npm run release:check
+```
 
 ## License
 

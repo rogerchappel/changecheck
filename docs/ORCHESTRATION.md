@@ -1,14 +1,23 @@
-# changecheck Orchestration
+# ChangeCheck Orchestration
 
-## Release Readiness Flow
+## Local Release Check
 
-1. Run `npm ci` from a clean checkout.
-2. Run `npm run release:check`.
-3. Run `node /Users/roger/Developer/my-opensource/releasebox/bin/releasebox.js check .` when ReleaseBox is available locally.
-4. Inspect `npm pack --dry-run` output before publishing or drafting a GitHub release.
+Run the full local gate before release promotion:
 
-## Promotion Notes
+```bash
+npm run release:check
+```
 
-- Keep checks local and deterministic.
-- Rebuild `dist` before testing because the published CLI runs from compiled output.
-- Include fixtures and examples in the tarball so users can reproduce smoke checks.
+This runs type-checking, build, tests, fixture smoke, and npm package dry-run.
+
+## CI Expectations
+
+Pull requests should keep the default CI workflow green. Release promotion should also pass ReleaseBox readiness checks before tags are created.
+
+## Manual Review
+
+Review package contents for:
+
+- CLI entrypoint in `dist/cli.js`.
+- README, license, and security policy.
+- Fixture coverage for clean, warning, and failure release states.

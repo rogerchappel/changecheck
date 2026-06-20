@@ -9,15 +9,11 @@
   },
   "files": [
     "dist",
-    "docs",
-    "examples",
-    "fixtures",
     "README.md",
     "LICENSE",
     "SECURITY.md",
     "CHANGELOG.md",
-    "CONTRIBUTING.md",
-    "CODE_OF_CONDUCT.md"
+    "CONTRIBUTING.md"
   ],
   "engines": {
     "node": ">=18"
