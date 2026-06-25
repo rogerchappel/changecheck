@@ -88,6 +88,17 @@ node dist/cli.js check fixtures/sample-release --format json
 node dist/cli.js check . --format json | jq '.summary.errors'
 ```
 
+Run the release consistency walkthrough:
+
+```bash
+bash demo/run-release-consistency-demo.sh
+```
+
+The demo writes clean and warning fixture outputs under
+`tmp/release-consistency-demo/`, then verifies the expected output markers.
+Promotion notes for a short walkthrough live in
+[`docs/promo/release-consistency-demo-brief.md`](docs/promo/release-consistency-demo-brief.md).
+
 ## Scripts
 
 ```bash
