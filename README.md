@@ -45,7 +45,15 @@ Exit codes:
 
 ### `changecheck init [directory]`
 
-(Placeholder) Initialize a release directory template.
+Create a minimal release directory that `changecheck check` can validate.
+
+```bash
+changecheck init ./my-release --release-version 1.2.3
+changecheck check ./my-release --format text
+```
+
+The command writes `package.json`, `CHANGELOG.md`, and `RELEASE.md`. Existing
+files are left untouched unless you pass `--force`.
 
 ## How It Works
 
