@@ -127,6 +127,12 @@ bash scripts/validate.sh  # Full validation pipeline
 - **Safe defaults**: Dry-run first, no destructive writes.
 - **Agent-friendly**: Structured JSON and clear exit codes for LLM workflows.
 
+## Limitations
+
+- ChangeCheck validates local release files; it does not query npm, GitHub Releases, PyPI, or other registries for published state.
+- Version and changelog parsing is intentionally conservative, so unusual custom changelog formats may need fixtures before being enforced in CI.
+- Treat findings as release-review evidence, not as a replacement for human review of release notes and package contents.
+
 ## Development
 
 Use Node.js 20 or newer. Run the same checks locally before opening a PR:
