@@ -3,13 +3,21 @@
   "version": "0.1.0",
   "description": "Local-first release consistency checker for changelogs, package versions, git tags, and release notes.",
   "type": "module",
-  "main": "./dist/index.js",
+  "main": "./dist/checker.js",
   "bin": {
     "changecheck": "./dist/cli.js"
   },
   "files": [
     "dist",
-    "README.md"
+    "demo",
+    "docs",
+    "examples",
+    "fixtures",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md"
   ],
   "engines": {
     "node": ">=18"
@@ -21,7 +29,8 @@
     "lint": "eslint .",
     "test": "node --test dist/__tests__/*.test.js",
     "smoke": "node dist/cli.js check fixtures/sample-release --format text",
-    "release:check": "npm test && npm run build && npm run smoke"
+    "package:smoke": "npm run build && node scripts/package-smoke.mjs",
+    "release:check": "npm run check && npm run build && npm test && npm run smoke && npm run package:smoke"
   },
   "keywords": [
     "changelog",
@@ -53,5 +62,6 @@
   "homepage": "https://github.com/rogerchappel/changecheck#readme",
   "bugs": {
     "url": "https://github.com/rogerchappel/changecheck/issues"
-  }
+  },
+  "exports": "./dist/checker.js"
 }
