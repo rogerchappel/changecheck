@@ -45,7 +45,15 @@ Exit codes:
 
 ### `changecheck init [directory]`
 
-(Placeholder) Initialize a release directory template.
+Create a minimal release directory that `changecheck check` can validate.
+
+```bash
+changecheck init ./my-release --release-version 1.2.3
+changecheck check ./my-release --format text
+```
+
+The command writes `package.json`, `CHANGELOG.md`, and `RELEASE.md`. Existing
+files are left untouched unless you pass `--force`.
 
 ## How It Works
 
@@ -88,6 +96,31 @@ node dist/cli.js check fixtures/sample-release --format json
 node dist/cli.js check . --format json | jq '.summary.errors'
 ```
 
+## Runnable demos
+
+Generate clean, drift, and failing release metadata outputs from the checked-in
+fixtures:
+
+```bash
+npm run build
+bash demo/run-release-drift-check.sh
+```
+
+See [docs/tutorials/check-release-drift.md](docs/tutorials/check-release-drift.md)
+for the walkthrough and [docs/promo/release-drift-brief.md](docs/promo/release-drift-brief.md)
+for a short recording outline.
+
+Run the release consistency walkthrough:
+
+```bash
+bash demo/run-release-consistency-demo.sh
+```
+
+The demo writes clean and warning fixture outputs under
+`tmp/release-consistency-demo/`, then verifies the expected output markers.
+Promotion notes for a short walkthrough live in
+[`docs/promo/release-consistency-demo-brief.md`](docs/promo/release-consistency-demo-brief.md).
+
 ## Scripts
 
 ```bash
@@ -95,7 +128,8 @@ npm run build       # TypeScript → dist/
 npm run check       # TypeScript type-check (no emit)
 npm test            # Run tests via node --test
 npm run smoke       # Run a real CLI smoke against fixture
-npm run release:check  # Run all checks in sequence
+npm run package:smoke  # Preview the npm package contents
+npm run release:check  # Run all checks and package smoke in sequence
 bash scripts/validate.sh  # Full validation pipeline
 ```
 
@@ -106,6 +140,26 @@ bash scripts/validate.sh  # Full validation pipeline
 - **Fixture-backed**: Test against real directories, not stubs.
 - **Safe defaults**: Dry-run first, no destructive writes.
 - **Agent-friendly**: Structured JSON and clear exit codes for LLM workflows.
+
+## Limitations
+
+- ChangeCheck validates local release files; it does not query npm, GitHub Releases, PyPI, or other registries for published state.
+- Version and changelog parsing is intentionally conservative, so unusual custom changelog formats may need fixtures before being enforced in CI.
+- Treat findings as release-review evidence, not as a replacement for human review of release notes and package contents.
+
+## Development
+
+Use Node.js 20 or newer. Run the same checks locally before opening a PR:
+
+```sh
+npm run build
+npm run check
+npm run lint
+npm test
+npm run smoke
+npm run package:smoke
+npm run release:check
+```
 
 ## License
 
