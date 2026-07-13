@@ -88,6 +88,20 @@ node dist/cli.js check fixtures/sample-release --format json
 node dist/cli.js check . --format json | jq '.summary.errors'
 ```
 
+## Runnable demo
+
+Generate clean, drift, and failing release metadata outputs from the checked-in
+fixtures:
+
+```bash
+npm run build
+bash demo/run-release-drift-check.sh
+```
+
+See [docs/tutorials/check-release-drift.md](docs/tutorials/check-release-drift.md)
+for the walkthrough and [docs/promo/release-drift-brief.md](docs/promo/release-drift-brief.md)
+for a short recording outline.
+
 ## Scripts
 
 ```bash
