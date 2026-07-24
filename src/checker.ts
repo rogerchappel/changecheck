@@ -9,11 +9,12 @@ export async function runCheck(options: CheckOptions): Promise<CheckResult> {
 
   const packageJsonPath = join(rootPath, 'package.json');
   const changelogPath = join(rootPath, 'CHANGELOG.md');
-  const releaseNotesPath = join(rootPath, 'RELEASE.md');
+  const releaseNoteNames = ['RELEASE.md', 'RELEASENOTES.md'] as const;
 
   let packageVersion: string | null = null;
   let changelogLatest: string | null = null;
   let releaseVersion: string | null = null;
+  let releaseNotesName: (typeof releaseNoteNames)[number] | null = null;
 
   try {
     const pkgRaw = await readFile(packageJsonPath, 'utf-8');
@@ -58,20 +59,24 @@ export async function runCheck(options: CheckOptions): Promise<CheckResult> {
     });
   }
 
-  try {
-    const releaseRaw = await readFile(releaseNotesPath, 'utf-8');
-    const versionMatch = releaseRaw.match(/(?:Release|Version)\s+v?(\d+\.\d+\.\d+)/i);
-    releaseVersion = versionMatch ? versionMatch[1] : null;
-  } catch {
-    // Release notes are optional
+  for (const fileName of releaseNoteNames) {
+    try {
+      const releaseRaw = await readFile(join(rootPath, fileName), 'utf-8');
+      const versionMatch = releaseRaw.match(/(?:Release|Version)\s+v?(\d+\.\d+\.\d+)/i);
+      releaseVersion = versionMatch ? versionMatch[1] : null;
+      releaseNotesName = fileName;
+      break;
+    } catch {
+      // Release notes are optional; try the fallback filename.
+    }
   }
 
-  if (releaseVersion && packageVersion && releaseVersion !== packageVersion) {
+  if (releaseVersion && releaseNotesName && packageVersion && releaseVersion !== packageVersion) {
     findings.push({
       severity: 'warning',
       category: 'consistency',
       message: 'Release notes version differs from package version',
-      details: `RELEASE.md says ${releaseVersion}, package.json says ${packageVersion}`,
+      details: `${releaseNotesName} says ${releaseVersion}, package.json says ${packageVersion}`,
     });
   }
 
@@ -87,7 +92,7 @@ export async function runCheck(options: CheckOptions): Promise<CheckResult> {
   const warnings = findings.filter((f) => f.severity === 'warning').length;
   const infos = findings.filter((f) => f.severity === 'info').length;
 
-  const exitCode: CheckResult['exitCode'] = errors > 0 ? 1 : 0;
+  const exitCode: CheckResult['exitCode'] = errors + warnings > 0 ? 1 : 0;
 
   return {
     exitCode,

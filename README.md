@@ -39,7 +39,7 @@ changecheck check ./my-release --format json
 ```
 
 Exit codes:
-- `0` — Clean. No errors found.
+- `0` — Clean. No errors or warnings found.
 - `1` — Findings detected (errors or warnings).
 - `2` — Invalid input or configuration.
 
@@ -59,7 +59,7 @@ files are left untouched unless you pass `--force`.
 
 1. Reads `package.json` for the declared version.
 2. Parses `CHANGELOG.md` for the latest version entry.
-3. Optionally reads `RELEASE.md` or `RELEASENOTES.md`.
+3. Optionally reads `RELEASE.md` or, when it is absent, `RELEASENOTES.md`.
 4. Compares versions deterministically — no network, no LLM.
 5. Outputs human-readable text or machine-readable JSON.
 
@@ -80,7 +80,10 @@ The `fixtures/` directory ships with ready-made test cases:
 fixtures/
 ├── sample-release/              # All versions match — exits 0
 ├── sample-release-warnings/     # Version mismatch — emits warnings
-└── sample-release-fail/         # Missing files — emits errors
+├── sample-release-fail/         # Missing files — emits errors
+├── release-notes-alternate/     # RELEASENOTES.md mismatch — exits 1
+├── release-notes-both/          # RELEASE.md takes precedence
+└── release-notes-absent/        # Optional release notes omitted
 ```
 
 ## Examples
