@@ -30,7 +30,7 @@
     "test": "node --test dist/__tests__/*.test.js",
     "smoke": "node dist/cli.js check fixtures/sample-release --format text",
     "package:smoke": "npm run build && node scripts/package-smoke.mjs",
-    "release:check": "npm run check && npm run build && npm test && npm run smoke && npm run package:smoke"
+    "release:check": "npm run check && npm run lint && npm run build && npm test && npm run smoke && npm run package:smoke"
   },
   "keywords": [
     "changelog",
@@ -48,6 +48,7 @@
     "@types/node": "^22.19.19",
     "@typescript-eslint/parser": "^8.59.3",
     "eslint": "^9.39.4",
+    "globals": "^16.4.0",
     "tsx": "^4.21.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.59.3"
