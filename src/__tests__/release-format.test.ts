@@ -2,7 +2,6 @@ import { describe, it } from 'node:test';
 import assert from 'node:assert';
 import { execSync } from 'node:child_process';
 import { runCheck } from '../checker.js';
-import type { CheckResult } from '../types.js';
 
 describe('changecheck release format', () => {
   it('should runCheck and return a result object', async () => {
@@ -18,12 +17,15 @@ describe('changecheck release format', () => {
 
   it('should handle empty changelog gracefully', () => {
     try {
-      const out = execSync('node dist/cli.js check fixtures/empty --format text', {
+      execSync('node dist/cli.js check fixtures/empty --format text', {
         encoding: 'utf8', stdio: 'pipe'
       });
       assert.ok(true, 'should not crash on empty changelog');
-    } catch (e: any) {
-      assert.ok(e.status !== undefined, 'should exit with status');
+    } catch (error: unknown) {
+      assert.ok(
+        error instanceof Error && 'status' in error,
+        'should exit with status',
+      );
     }
   });
 });
