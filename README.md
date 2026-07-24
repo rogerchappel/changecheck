@@ -129,6 +129,7 @@ Promotion notes for a short walkthrough live in
 ```bash
 npm run build       # TypeScript → dist/
 npm run check       # TypeScript type-check (no emit)
+npm run lint        # Check source, tests, and scripts with ESLint
 npm test            # Run tests via node --test
 npm run smoke       # Run a real CLI smoke against fixture
 npm run package:smoke  # Preview the npm package contents
@@ -163,6 +164,9 @@ npm run smoke
 npm run package:smoke
 npm run release:check
 ```
+
+`npm run release:check` is the CI entry point and runs every command above,
+including lint.
 
 ## License
 
