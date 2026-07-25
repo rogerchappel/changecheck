@@ -31,7 +31,8 @@ node dist/cli.js check fixtures/sample-release --format text
 
 ### `changecheck check <directory>`
 
-Run consistency checks against package version, changelog, and release notes.
+Run consistency checks against package version, changelog, release notes, and
+local release tags when the directory itself is a Git repository root.
 
 ```bash
 changecheck check . --format text
@@ -60,8 +61,11 @@ files are left untouched unless you pass `--force`.
 1. Reads `package.json` for the declared version.
 2. Parses `CHANGELOG.md` for the latest version entry.
 3. Optionally reads `RELEASE.md` or, when it is absent, `RELEASENOTES.md`.
-4. Compares versions deterministically — no network, no LLM.
-5. Outputs human-readable text or machine-readable JSON.
+4. When the checked directory is a Git repository root, compares the package
+   version with its highest numeric `vX.Y.Z` or `X.Y.Z` local tag. Directories
+   without such tags and non-Git directories keep file-only behavior.
+5. Compares versions deterministically — no network, no LLM.
+6. Outputs human-readable text or machine-readable JSON.
 
 ## Directory Layout
 
@@ -148,6 +152,8 @@ bash scripts/validate.sh  # Full validation pipeline
 ## Limitations
 
 - ChangeCheck validates local release files; it does not query npm, GitHub Releases, PyPI, or other registries for published state.
+- Git tag checks use local tags only and ignore non-release tag names,
+  prerelease tags, and tags from a parent repository.
 - Version and changelog parsing is intentionally conservative, so unusual custom changelog formats may need fixtures before being enforced in CI.
 - Treat findings as release-review evidence, not as a replacement for human review of release notes and package contents.
 
