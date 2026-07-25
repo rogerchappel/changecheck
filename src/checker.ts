@@ -1,7 +1,48 @@
+import { execFile } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
+import { realpath } from 'node:fs/promises';
 import { join } from 'node:path';
+import { promisify } from 'node:util';
 import { parseChangelog } from './changelog.js';
 import type { CheckOptions, CheckResult, Finding } from './types.js';
+
+const execFileAsync = promisify(execFile);
+
+async function latestLocalReleaseTag(rootPath: string): Promise<{ name: string; version: string } | null> {
+  try {
+    const [{ stdout: topLevel }, rootRealPath] = await Promise.all([
+      execFileAsync('git', ['-C', rootPath, 'rev-parse', '--show-toplevel'], { encoding: 'utf8' }),
+      realpath(rootPath),
+    ]);
+    if (topLevel.trim() !== rootRealPath) return null;
+
+    const { stdout } = await execFileAsync('git', ['-C', rootPath, 'tag', '--list'], {
+      encoding: 'utf8',
+    });
+    const releaseTags = stdout
+      .split(/\r?\n/)
+      .map((name) => {
+        const match = name.match(/^v?(\d+)\.(\d+)\.(\d+)$/);
+        return match ? {
+          name,
+          version: `${match[1]}.${match[2]}.${match[3]}`,
+          parts: [Number(match[1]), Number(match[2]), Number(match[3])],
+        } : null;
+      })
+      .filter((tag): tag is NonNullable<typeof tag> => tag !== null)
+      .sort((left, right) => {
+        for (let index = 0; index < left.parts.length; index += 1) {
+          const difference = (right.parts[index] ?? 0) - (left.parts[index] ?? 0);
+          if (difference !== 0) return difference;
+        }
+        return left.name.localeCompare(right.name);
+      });
+    const latest = releaseTags[0];
+    return latest ? { name: latest.name, version: latest.version } : null;
+  } catch {
+    return null;
+  }
+}
 
 export async function runCheck(options: CheckOptions): Promise<CheckResult> {
   const { rootPath } = options;
@@ -77,6 +118,16 @@ export async function runCheck(options: CheckOptions): Promise<CheckResult> {
       category: 'consistency',
       message: 'Release notes version differs from package version',
       details: `${releaseNotesName} says ${releaseVersion}, package.json says ${packageVersion}`,
+    });
+  }
+
+  const latestTag = await latestLocalReleaseTag(rootPath);
+  if (latestTag && packageVersion && latestTag.version !== packageVersion) {
+    findings.push({
+      severity: 'error',
+      category: 'consistency',
+      message: 'Latest local git tag differs from package version',
+      details: `git tag ${latestTag.name} says ${latestTag.version}, package.json says ${packageVersion}`,
     });
   }
 

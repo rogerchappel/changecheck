@@ -1,14 +1,16 @@
 #!/usr/bin/env node
 import { access, mkdir, writeFile } from 'node:fs/promises';
+import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { Command } from 'commander';
 import { runCheck } from './checker.js';
 import { formatOutput } from './formatter.js';
 const program = new Command();
+const packageMetadata = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 program
     .name('changecheck')
     .description('Local-first release consistency checker')
-    .version('0.1.0');
+    .version(packageMetadata.version);
 program
     .command('check')
     .description('Run consistency checks on a release directory')
