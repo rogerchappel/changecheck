@@ -11,6 +11,11 @@ format and uses semantic versioning when versioned releases are published.
 
 - Initial project setup.
 
+### Changed
+
+- Refresh development dependencies and pin audited transitive glob-matching
+  packages to patched releases.
+
 ## Release Links
 
 - Unreleased:
