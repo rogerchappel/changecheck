@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { Command } from 'commander';
 import { runCheck } from './checker.js';
 import { formatOutput } from './formatter.js';
+import { isSemanticVersion } from './semver.js';
 
 const program = new Command();
 const packageMetadata = JSON.parse(
@@ -54,7 +55,7 @@ program
 program.parse();
 
 async function initReleaseDirectory(root: string, version: string, force: boolean): Promise<string[]> {
-  if (!/^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/.test(version)) {
+  if (!isSemanticVersion(version)) {
     throw new Error(`Invalid semantic version: ${version}`);
   }
 
