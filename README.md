@@ -56,6 +56,11 @@ changecheck check ./my-release --format text
 The command writes `package.json`, `CHANGELOG.md`, and `RELEASE.md`. Existing
 files are left untouched unless you pass `--force`.
 
+Release versions follow SemVer and may include prerelease identifiers, build
+metadata, or both, such as `1.2.3-alpha.1`, `1.2.3+build.7`, and
+`1.2.3-rc.1+build.7`. Numeric core and prerelease identifiers cannot contain
+leading zeroes.
+
 ## How It Works
 
 1. Reads `package.json` for the declared version.
