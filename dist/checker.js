@@ -4,6 +4,7 @@ import { realpath } from 'node:fs/promises';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
 import { parseChangelog } from './changelog.js';
+import { versionFromText } from './semver.js';
 const execFileAsync = promisify(execFile);
 async function latestLocalReleaseTag(rootPath) {
     try {
@@ -98,8 +99,8 @@ export async function runCheck(options) {
     for (const fileName of releaseNoteNames) {
         try {
             const releaseRaw = await readFile(join(rootPath, fileName), 'utf-8');
-            const versionMatch = releaseRaw.match(/(?:Release|Version)\s+v?(\d+\.\d+\.\d+)/i);
-            releaseVersion = versionMatch ? versionMatch[1] : null;
+            const headingMatch = releaseRaw.match(/(?:Release|Version)\s+([^\s]+)/i);
+            releaseVersion = headingMatch ? versionFromText(headingMatch[1]) : null;
             releaseNotesName = fileName;
             break;
         }

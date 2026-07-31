@@ -15,6 +15,8 @@ format and uses semantic versioning when versioned releases are published.
 
 - Refresh development dependencies and pin audited transitive glob-matching
   packages to patched releases.
+- Preserve SemVer prerelease and build metadata consistently across generated
+  package, changelog, and release-note files.
 
 ## Release Links
 

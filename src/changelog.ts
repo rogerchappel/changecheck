@@ -1,7 +1,8 @@
 import { readFile } from 'node:fs/promises';
 import type { ParsedChangelog, ChangelogVersion } from './types.js';
+import { SEMVER_SOURCE, versionFromText } from './semver.js';
 
-const VERSION_HEADING_RE = /^## \[?v?(\d+\.\d+\.\d+(?:-[a-z0-9.+]+)?)\]?(-.*)?/i;
+const VERSION_HEADING_RE = new RegExp(`^## \\[?v?(${SEMVER_SOURCE})\\]?(?:\\s+-.*)?$`);
 const SECTION_HEADING_RE = /^### (.+)/i;
 
 export async function parseChangelog(changelogPath: string): Promise<ParsedChangelog> {
@@ -49,6 +50,5 @@ export async function parseChangelog(changelogPath: string): Promise<ParsedChang
 }
 
 export function versionFromString(str: string): string | null {
-  const match = str.match(/v?(\d+\.\d+\.\d+(?:-[a-z0-9.+]+)?)/i);
-  return match ? match[1] : null;
+  return versionFromText(str);
 }
