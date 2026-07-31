@@ -35,7 +35,7 @@ program
 
 program
   .command('init')
-  .description('Initialize a new release directory with sample files')
+  .description('Initialize sample files atomically unless --force is used')
   .argument('[root]', 'path to initialize', '.')
   .option('--release-version <version>', 'release version to write into sample files', '0.1.0')
   .option('--force', 'overwrite existing sample files')
