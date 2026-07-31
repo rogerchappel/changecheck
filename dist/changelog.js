@@ -1,5 +1,6 @@
 import { readFile } from 'node:fs/promises';
-const VERSION_HEADING_RE = /^## \[?v?(\d+\.\d+\.\d+(?:-[a-z0-9.+]+)?)\]?(-.*)?/i;
+import { SEMVER_SOURCE, versionFromText } from './semver.js';
+const VERSION_HEADING_RE = new RegExp(`^## \\[?v?(${SEMVER_SOURCE})\\]?(?:\\s+-.*)?$`);
 const SECTION_HEADING_RE = /^### (.+)/i;
 export async function parseChangelog(changelogPath) {
     const raw = await readFile(changelogPath, 'utf-8');
@@ -42,6 +43,5 @@ export async function parseChangelog(changelogPath) {
     return { versions };
 }
 export function versionFromString(str) {
-    const match = str.match(/v?(\d+\.\d+\.\d+(?:-[a-z0-9.+]+)?)/i);
-    return match ? match[1] : null;
+    return versionFromText(str);
 }

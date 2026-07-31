@@ -5,6 +5,7 @@ import { join } from 'node:path';
 import { Command } from 'commander';
 import { runCheck } from './checker.js';
 import { formatOutput } from './formatter.js';
+import { isSemanticVersion } from './semver.js';
 const program = new Command();
 const packageMetadata = JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8'));
 program
@@ -48,7 +49,7 @@ program
 });
 program.parse();
 async function initReleaseDirectory(root, version, force) {
-    if (!/^\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?$/.test(version)) {
+    if (!isSemanticVersion(version)) {
         throw new Error(`Invalid semantic version: ${version}`);
     }
     await mkdir(root, { recursive: true });
