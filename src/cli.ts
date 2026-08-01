@@ -35,7 +35,7 @@ program
 
 program
   .command('init')
-  .description('Initialize a new release directory with sample files')
+  .description('Initialize sample files atomically unless --force is used')
   .argument('[root]', 'path to initialize', '.')
   .option('--release-version <version>', 'release version to write into sample files', '0.1.0')
   .option('--force', 'overwrite existing sample files')
@@ -78,11 +78,16 @@ async function initReleaseDirectory(root: string, version: string, force: boolea
 
   const written: string[] = [];
 
+  if (!force) {
+    for (const fileName of files.keys()) {
+      if (await exists(join(root, fileName))) {
+        throw new Error(`${fileName} already exists; pass --force to overwrite sample files`);
+      }
+    }
+  }
+
   for (const [fileName, contents] of files) {
     const target = join(root, fileName);
-    if (!force && (await exists(target))) {
-      throw new Error(`${fileName} already exists; pass --force to overwrite sample files`);
-    }
     await writeFile(target, contents, 'utf8');
     written.push(fileName);
   }

@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 
@@ -47,6 +47,24 @@ try {
     }),
     'Summary: 0 errors, 0 warnings, 1 info',
   );
+
+  const initTarget = join(tmp, 'atomic-init');
+  mkdirSync(initTarget);
+  writeFileSync(join(initTarget, 'CHANGELOG.md'), 'existing changelog\n');
+  try {
+    execFileSync(bin, ['init', initTarget], { encoding: 'utf8', stdio: 'pipe' });
+    throw new Error('Package smoke failed; init unexpectedly accepted an existing target file');
+  } catch (error) {
+    if (error.status !== 2) throw error;
+  }
+  if (readFileSync(join(initTarget, 'CHANGELOG.md'), 'utf8') !== 'existing changelog\n') {
+    throw new Error('Package smoke failed; init changed the colliding target file');
+  }
+  for (const missing of ['package.json', 'RELEASE.md']) {
+    if (existsSync(join(initTarget, missing))) {
+      throw new Error(`Package smoke failed; init partially created ${missing}`);
+    }
+  }
 } finally {
   rmSync(tmp, { recursive: true, force: true });
   rmSync(pack.filename, { force: true });
