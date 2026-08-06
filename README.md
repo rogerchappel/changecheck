@@ -181,6 +181,20 @@ npm run release:check
 `npm run release:check` is the CI entry point and runs every command above,
 including lint.
 
+## Publishing releases
+
+Before publishing for the first time, configure `changecheck` on npm with a
+[trusted publisher](https://docs.npmjs.com/trusted-publishers/) for this GitHub
+repository and `.github/workflows/release.yml`. The workflow uses GitHub OIDC;
+it does not require a long-lived npm token.
+
+A `v*.*.*` tag runs the full release checks, builds and verifies one npm
+tarball, publishes that exact file to npm with provenance and public access,
+and only then creates the GitHub release with the same tarball attached. The
+pull-request dry run executes `npm run release:contract` so registry setup,
+OIDC permission, publication flags, artifact identity, and step ordering cannot
+silently drift from this sequence.
+
 ## License
 
 MIT — see [LICENSE](./LICENSE).
