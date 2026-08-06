@@ -30,7 +30,9 @@
     "test": "node --test dist/__tests__/*.test.js",
     "smoke": "node dist/cli.js check fixtures/sample-release --format text",
     "package:smoke": "npm run build && node scripts/package-smoke.mjs",
-    "release:check": "npm run check && npm run lint && npm run build && npm test && npm run smoke && npm run package:smoke"
+    "release:contract": "node scripts/release-contract.mjs",
+    "test:release-contract": "node --test scripts/release-contract.test.mjs",
+    "release:check": "npm run release:contract && npm run test:release-contract && npm run check && npm run lint && npm run build && npm test && npm run smoke && npm run package:smoke"
   },
   "keywords": [
     "changelog",
