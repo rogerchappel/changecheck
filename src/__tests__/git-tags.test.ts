@@ -47,6 +47,25 @@ describe('local git tag consistency', () => {
     assert.equal(result.findings.summary.errors, 0);
   });
 
+  it('accepts a matching prerelease tag ahead of an older stable release', async () => {
+    const root = await releaseDirectory('1.2.3-rc.1');
+    await initializeGitRepository(root, ['v1.2.2', 'v1.2.3-rc.1']);
+    assert.equal((await runCheck({ rootPath: root, format: 'text' })).exitCode, 0);
+  });
+
+  it('orders prereleases according to SemVer precedence', async () => {
+    const root = await releaseDirectory('1.2.3-rc.2');
+    await initializeGitRepository(root, ['v1.2.3-alpha', 'v1.2.3-rc.10', 'v1.2.3-rc.2']);
+    const result = await runCheck({ rootPath: root, format: 'text' });
+    assert.match(result.findings.findings[0]?.details ?? '', /v1\.2\.3-rc\.10/);
+  });
+
+  it('ignores build metadata when ordering release tags', async () => {
+    const root = await releaseDirectory();
+    await initializeGitRepository(root, ['v1.2.2+build.99', 'v1.2.3', 'v1.2.3+build.999']);
+    assert.equal((await runCheck({ rootPath: root, format: 'text' })).exitCode, 0);
+  });
+
   it('reports the highest mismatching release tag', async () => {
     const root = await releaseDirectory();
     await initializeGitRepository(root, ['v1.2.3', 'v1.2.10', 'not-a-release']);
@@ -62,6 +81,12 @@ describe('local git tag consistency', () => {
   it('skips comparison when no release tags exist', async () => {
     const root = await releaseDirectory();
     await initializeGitRepository(root, ['preview']);
+    assert.equal((await runCheck({ rootPath: root, format: 'text' })).exitCode, 0);
+  });
+
+  it('ignores malformed and non-release tags', async () => {
+    const root = await releaseDirectory();
+    await initializeGitRepository(root, ['v1.2.3', 'v1.2.4-01', 'v2.0', 'release-9.0.0']);
     assert.equal((await runCheck({ rootPath: root, format: 'text' })).exitCode, 0);
   });
 

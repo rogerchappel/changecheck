@@ -69,8 +69,9 @@ leading zeroes.
 2. Parses `CHANGELOG.md` for the latest version entry.
 3. Optionally reads `RELEASE.md` or, when it is absent, `RELEASENOTES.md`.
 4. When the checked directory is a Git repository root, compares the package
-   version with its highest numeric `vX.Y.Z` or `X.Y.Z` local tag. Directories
-   without such tags and non-Git directories keep file-only behavior.
+   version with its highest SemVer `vX.Y.Z` or `X.Y.Z` local tag, including
+   valid prerelease and build forms. Directories without such tags and non-Git
+   directories keep file-only behavior.
 5. Compares versions deterministically — no network, no LLM.
 6. Outputs human-readable text or machine-readable JSON.
 

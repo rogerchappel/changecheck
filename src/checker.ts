@@ -4,7 +4,7 @@ import { realpath } from 'node:fs/promises';
 import { join } from 'node:path';
 import { promisify } from 'node:util';
 import { parseChangelog } from './changelog.js';
-import { versionFromText } from './semver.js';
+import { compareSemanticVersions, parseSemanticVersion, versionFromText } from './semver.js';
 import type { CheckOptions, CheckResult, Finding } from './types.js';
 
 const execFileAsync = promisify(execFile);
@@ -23,23 +23,20 @@ async function latestLocalReleaseTag(rootPath: string): Promise<{ name: string; 
     const releaseTags = stdout
       .split(/\r?\n/)
       .map((name) => {
-        const match = name.match(/^v?(\d+)\.(\d+)\.(\d+)$/);
-        return match ? {
+        const version = parseSemanticVersion(name.startsWith('v') ? name.slice(1) : name);
+        return version ? {
           name,
-          version: `${match[1]}.${match[2]}.${match[3]}`,
-          parts: [Number(match[1]), Number(match[2]), Number(match[3])],
+          version,
         } : null;
       })
       .filter((tag): tag is NonNullable<typeof tag> => tag !== null)
       .sort((left, right) => {
-        for (let index = 0; index < left.parts.length; index += 1) {
-          const difference = (right.parts[index] ?? 0) - (left.parts[index] ?? 0);
-          if (difference !== 0) return difference;
-        }
+        const precedence = compareSemanticVersions(right.version, left.version);
+        if (precedence !== 0) return precedence;
         return left.name.localeCompare(right.name);
       });
     const latest = releaseTags[0];
-    return latest ? { name: latest.name, version: latest.version } : null;
+    return latest ? { name: latest.name, version: latest.version.raw } : null;
   } catch {
     return null;
   }

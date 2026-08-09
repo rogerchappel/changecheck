@@ -12,3 +12,47 @@ export function isSemanticVersion(value) {
 export function versionFromText(value) {
     return value.match(EMBEDDED_SEMVER_RE)?.[1] ?? null;
 }
+export function parseSemanticVersion(value) {
+    if (!isSemanticVersion(value))
+        return null;
+    const [precedence] = value.split('+');
+    const separator = precedence.indexOf('-');
+    const core = separator === -1 ? precedence : precedence.slice(0, separator);
+    const prerelease = separator === -1 ? '' : precedence.slice(separator + 1);
+    const [major, minor, patch] = core.split('.').map(Number);
+    return {
+        raw: value,
+        major: major,
+        minor: minor,
+        patch: patch,
+        prerelease: prerelease ? prerelease.split('.') : [],
+    };
+}
+export function compareSemanticVersions(left, right) {
+    for (const key of ['major', 'minor', 'patch']) {
+        if (left[key] !== right[key])
+            return left[key] - right[key];
+    }
+    if (left.prerelease.length === 0 || right.prerelease.length === 0) {
+        return right.prerelease.length - left.prerelease.length;
+    }
+    const length = Math.max(left.prerelease.length, right.prerelease.length);
+    for (let index = 0; index < length; index += 1) {
+        const leftPart = left.prerelease[index];
+        const rightPart = right.prerelease[index];
+        if (leftPart === undefined)
+            return -1;
+        if (rightPart === undefined)
+            return 1;
+        if (leftPart === rightPart)
+            continue;
+        const leftNumeric = /^\d+$/.test(leftPart);
+        const rightNumeric = /^\d+$/.test(rightPart);
+        if (leftNumeric && rightNumeric)
+            return Number(leftPart) - Number(rightPart);
+        if (leftNumeric !== rightNumeric)
+            return leftNumeric ? -1 : 1;
+        return leftPart.localeCompare(rightPart);
+    }
+    return 0;
+}
