@@ -111,6 +111,21 @@ node dist/cli.js check fixtures/sample-release --format json
 node dist/cli.js check . --format json | jq '.summary.errors'
 ```
 
+Valid SemVer prereleases participate in the local highest-tag check. This
+runnable example accepts `v1.2.3-rc.1` ahead of the older stable `v1.2.2`:
+
+```bash
+release_dir="$(mktemp -d)"
+node dist/cli.js init "$release_dir" --release-version 1.2.3-rc.1
+git -C "$release_dir" init --quiet
+git -C "$release_dir" add .
+git -C "$release_dir" -c user.name=Example -c user.email=example@example.invalid \
+  commit --quiet -m "Add release metadata"
+git -C "$release_dir" tag v1.2.2
+git -C "$release_dir" tag v1.2.3-rc.1
+node dist/cli.js check "$release_dir" --format text
+```
+
 ## Runnable demos
 
 Generate clean, drift, and failing release metadata outputs from the checked-in
@@ -160,8 +175,9 @@ bash scripts/validate.sh  # Full validation pipeline
 ## Limitations
 
 - ChangeCheck validates local release files; it does not query npm, GitHub Releases, PyPI, or other registries for published state.
-- Git tag checks use local tags only and ignore non-release tag names,
-  prerelease tags, and tags from a parent repository.
+- Git tag checks use local tags only. Valid SemVer prerelease tags participate
+  in highest-tag selection; malformed tags, non-release tag names, and tags
+  from a parent repository are ignored.
 - Version and changelog parsing is intentionally conservative, so unusual custom changelog formats may need fixtures before being enforced in CI.
 - Treat findings as release-review evidence, not as a replacement for human review of release notes and package contents.
 
