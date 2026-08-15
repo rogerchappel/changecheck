@@ -157,7 +157,7 @@ Promotion notes for a short walkthrough live in
 npm run build       # TypeScript → dist/
 npm run check       # TypeScript type-check (no emit)
 npm run lint        # Check source, tests, and scripts with ESLint
-npm test            # Run tests via node --test
+npm test            # Build and run every source test via node --test
 npm run smoke       # Run a real CLI smoke against fixture
 npm run package:smoke  # Preview the npm package contents
 npm run release:check  # Run all checks and package smoke in sequence
@@ -186,7 +186,6 @@ bash scripts/validate.sh  # Full validation pipeline
 Use Node.js 20 or newer. Run the same checks locally before opening a PR:
 
 ```sh
-npm run build
 npm run check
 npm run lint
 npm test
@@ -195,8 +194,10 @@ npm run package:smoke
 npm run release:check
 ```
 
-`npm run release:check` is the CI entry point and runs every command above,
-including lint.
+`npm test` performs a deterministic build first and verifies that every source
+test has a compiled test before running the complete inventory. `npm run
+release:check` is the CI entry point and runs every command above, including
+lint.
 
 ## Publishing releases
 
