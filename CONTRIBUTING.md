@@ -12,7 +12,7 @@ Thanks for caring! Here's how to jump in.
 
 1. Fork the repo and create a branch from `main`.
 2. Make your fix, feature, or doc improvement.
-3. Run the checks: `npm run build && npm test && npm run smoke`.
+3. Run the checks: `npm test && npm run smoke` (`npm test` builds first).
 4. Commit with a descriptive message.
 5. Open a pull request against `main`.
 
@@ -27,7 +27,6 @@ Use the [issue template](.github/pull_request_template.md) and include:
 
 ```bash
 npm install
-npm run build
 npm test
 npm run smoke
 ```
