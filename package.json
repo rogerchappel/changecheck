@@ -20,7 +20,7 @@
     "CONTRIBUTING.md"
   ],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "dev": "tsx src/cli.ts",
@@ -34,7 +34,9 @@
     "package:smoke": "npm run build && node scripts/package-smoke.mjs",
     "release:contract": "node scripts/release-contract.mjs",
     "test:release-contract": "node --test scripts/release-contract.test.mjs",
-    "release:check": "npm run release:contract && npm run test:release-contract && npm run check && npm run lint && npm run build && npm test && npm run smoke && npm run package:smoke"
+    "package:contract": "node scripts/package-contract.mjs",
+    "test:package-contract": "node --test scripts/package-contract.test.mjs",
+    "release:check": "npm run release:contract && npm run test:release-contract && npm run package:contract && npm run test:package-contract && npm run check && npm run lint && npm run build && npm test && npm run smoke && npm run package:smoke"
   },
   "keywords": [
     "changelog",
