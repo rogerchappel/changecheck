@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { access, mkdir, writeFile } from 'node:fs/promises';
+import { access, mkdir, stat, writeFile } from 'node:fs/promises';
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { Command } from 'commander';
@@ -24,8 +24,10 @@ program
   .option('--format <text|json>', 'output format', 'text')
   .action(async (root: string, opts: { format: string }) => {
     try {
-      const result = await runCheck({ rootPath: root, format: opts.format as 'text' | 'json' });
-      process.stdout.write(formatOutput(result.findings, opts.format as 'text' | 'json'));
+      const format = parseOutputFormat(opts.format);
+      await requireDirectory(root);
+      const result = await runCheck({ rootPath: root, format });
+      process.stdout.write(formatOutput(result.findings, format));
       process.exit(result.exitCode);
     } catch (err) {
       console.error('Error:', err instanceof Error ? err.message : err);
@@ -53,6 +55,22 @@ program
   });
 
 program.parse();
+
+function parseOutputFormat(value: string): 'text' | 'json' {
+  if (value !== 'text' && value !== 'json') {
+    throw new Error(`Unsupported format "${value}"; expected text or json`);
+  }
+  return value;
+}
+
+async function requireDirectory(root: string): Promise<void> {
+  try {
+    if ((await stat(root)).isDirectory()) return;
+  } catch {
+    // Report missing and inaccessible paths with the same stable input diagnostic.
+  }
+  throw new Error(`Check root is not a directory: ${root}`);
+}
 
 async function initReleaseDirectory(root: string, version: string, force: boolean): Promise<string[]> {
   if (!isSemanticVersion(version)) {
