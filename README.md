@@ -32,7 +32,9 @@ node dist/cli.js check fixtures/sample-release --format text
 ### `changecheck check <directory>`
 
 Run consistency checks against package version, changelog, release notes, and
-local release tags when the directory itself is a Git repository root.
+local release tags when the directory itself is a Git repository root. The
+root must be an existing directory, and `--format` accepts only `text` or
+`json`.
 
 ```bash
 changecheck check . --format text
@@ -42,7 +44,8 @@ changecheck check ./my-release --format json
 Exit codes:
 - `0` — Clean. No errors or warnings found.
 - `1` — Findings detected (errors or warnings).
-- `2` — Invalid input or configuration.
+- `2` — Invalid input or configuration, including a missing/non-directory root
+  or unsupported output format.
 
 ### `changecheck init [directory]`
 
