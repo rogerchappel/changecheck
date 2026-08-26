@@ -49,6 +49,10 @@
   ],
   "author": "Roger Chappel",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rogerchappel/changecheck.git"
+  },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
     "@types/node": "^22.19.19",
