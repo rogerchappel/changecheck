@@ -13,9 +13,7 @@ format and uses semantic versioning when versioned releases are published.
 
 ## Release Links
 
-- Unreleased:
-  `https://github.com/rogerchappel/tmp-changecheck/compare/...HEAD`
-- Latest release:
-  `https://github.com/rogerchappel/tmp-changecheck/releases/latest`
+- Unreleased: [compare](https://github.com/rogerchappel/changecheck/compare/...HEAD)
+- Latest release: [releases](https://github.com/rogerchappel/changecheck/releases/latest)
 
-Replace placeholder links once the first release tag exists.
+Placeholder links; update with real tags after the first version is published.
