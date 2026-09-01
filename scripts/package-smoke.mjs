@@ -48,6 +48,18 @@ try {
     'Summary: 0 errors, 0 warnings, 1 info',
   );
 
+  const invalidVersionTarget = join(tmp, 'invalid-version');
+  mkdirSync(invalidVersionTarget);
+  writeFileSync(join(invalidVersionTarget, 'package.json'), JSON.stringify({ version: 123 }));
+  writeFileSync(join(invalidVersionTarget, 'CHANGELOG.md'), '## [1.2.3] - 2026-09-01\n');
+  try {
+    execFileSync(bin, ['check', invalidVersionTarget, '--format', 'json'], { encoding: 'utf8', stdio: 'pipe' });
+    throw new Error('Package smoke failed; installed CLI accepted a numeric package version');
+  } catch (error) {
+    if (error.status !== 1) throw error;
+    assertIncludes(error.stdout, 'package.json version must be a non-empty valid SemVer string');
+  }
+
   const initTarget = join(tmp, 'atomic-init');
   mkdirSync(initTarget);
   writeFileSync(join(initTarget, 'CHANGELOG.md'), 'existing changelog\n');
