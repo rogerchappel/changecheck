@@ -78,6 +78,10 @@ leading zeroes.
 5. Compares versions deterministically — no network, no LLM.
 6. Outputs human-readable text or machine-readable JSON.
 
+The `package.json` version is required and must be a non-empty SemVer string.
+Missing, null, numeric, or malformed versions are package errors and exit 1.
+Valid prerelease and build metadata are supported.
+
 ## Directory Layout
 
 ```

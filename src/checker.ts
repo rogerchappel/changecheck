@@ -7,6 +7,8 @@ import { parseChangelog } from './changelog.js';
 import { compareSemanticVersions, parseSemanticVersion, versionFromText } from './semver.js';
 import type { CheckOptions, CheckResult, Finding } from './types.js';
 
+const SEMVER_PATTERN = /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*)(?:\.(?:0|[1-9]\d*|\d*[A-Za-z-][0-9A-Za-z-]*))*))?(?:\+[0-9A-Za-z-]+(?:\.[0-9A-Za-z-]+)*)?$/;
+
 const execFileAsync = promisify(execFile);
 
 async function latestLocalReleaseTag(rootPath: string): Promise<{ name: string; version: string } | null> {
@@ -58,7 +60,16 @@ export async function runCheck(options: CheckOptions): Promise<CheckResult> {
   try {
     const pkgRaw = await readFile(packageJsonPath, 'utf-8');
     const pkg = JSON.parse(pkgRaw);
-    packageVersion = pkg.version ?? null;
+    if (typeof pkg.version !== 'string' || !SEMVER_PATTERN.test(pkg.version)) {
+      findings.push({
+        severity: 'error',
+        category: 'package',
+        message: 'package.json version must be a non-empty valid SemVer string',
+        details: packageJsonPath,
+      });
+    } else {
+      packageVersion = pkg.version;
+    }
   } catch {
     findings.push({
       severity: 'error',
