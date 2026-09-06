@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Report a deterministic error when a present release-notes file has no valid
+  SemVer release/version heading, without changing optional-file precedence.
+
 All notable changes to this project will be documented in this file.
 
 This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/)
