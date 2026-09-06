@@ -115,6 +115,14 @@ export async function runCheck(options: CheckOptions): Promise<CheckResult> {
       const headingMatch = releaseRaw.match(/(?:Release|Version)\s+([^\s]+)/i);
       releaseVersion = headingMatch ? versionFromText(headingMatch[1]) : null;
       releaseNotesName = fileName;
+      if (!releaseVersion) {
+        findings.push({
+          severity: 'error',
+          category: 'release-notes',
+          message: `${fileName} contains no valid SemVer release heading`,
+          details: join(rootPath, fileName),
+        });
+      }
       break;
     } catch {
       // Release notes are optional; try the fallback filename.
