@@ -71,6 +71,10 @@ leading zeroes.
 1. Reads `package.json` for the declared version.
 2. Parses `CHANGELOG.md` for the latest version entry.
 3. Optionally reads `RELEASE.md` or, when it is absent, `RELEASENOTES.md`.
+   A present file must contain a `Release <version>` or `Version <version>`
+   heading with a valid SemVer version; otherwise the check reports a
+   release-notes error and exits 1. `RELEASE.md` retains precedence even when
+   it is malformed, while omitting both files remains valid.
 4. When the checked directory is a Git repository root, compares the package
    version with its highest SemVer `vX.Y.Z` or `X.Y.Z` local tag, including
    valid prerelease and build forms. Directories without such tags and non-Git
