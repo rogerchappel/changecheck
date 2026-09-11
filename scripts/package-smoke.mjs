@@ -30,6 +30,15 @@ if (missing.length > 0) {
   process.exit(1);
 }
 
+const packedBuildOnly = [...files].filter(
+  (file) => file.includes('__tests__') || file.endsWith('.map'),
+);
+if (packedBuildOnly.length > 0) {
+  console.error('Package smoke failed; tarball contains build-only artifacts:');
+  for (const file of packedBuildOnly) console.error(`- ${file}`);
+  process.exit(1);
+}
+
 const tmp = mkdtempSync(join(tmpdir(), 'changecheck-package-smoke-'));
 try {
   execFileSync('npm', ['init', '-y'], { cwd: tmp, stdio: 'ignore' });
@@ -82,7 +91,7 @@ try {
   rmSync(pack.filename, { force: true });
 }
 
-console.log(`Package smoke OK: ${pack.name}@${pack.version} includes ${pack.files.length} files and a runnable changecheck bin.`);
+console.log(`Package smoke OK: ${pack.name}@${pack.version} includes ${pack.files.length} files, no build-only artifacts, and a runnable changecheck bin.`);
 
 function assertIncludes(output, expected) {
   if (!output.includes(expected)) {
