@@ -31,4 +31,13 @@ npm test
 npm run smoke
 ```
 
+## Packaging and dist policy
+
+`dist/` and `.test-build/` are generated and gitignored — never commit build
+output. `npm test` compiles runtime modules to `dist/` and test suites to
+`.test-build/`, so published artifacts can never contain compiled tests. When
+you change `package.json`, run `npm run package:contract` (duplicate
+top-level keys fail it) and `npm run package:smoke` (packed `__tests__` or
+sourcemaps fail it); `npm run release:check` runs both.
+
 Happy building! 🧭

@@ -165,10 +165,11 @@ Promotion notes for a short walkthrough live in
 ## Scripts
 
 ```bash
-npm run build       # TypeScript → dist/
+npm run build       # TypeScript → dist/ (runtime modules only)
+npm run build:tests # TypeScript → .test-build/ (compiled test suites)
 npm run check       # TypeScript type-check (no emit)
 npm run lint        # Check source, tests, and scripts with ESLint
-npm test            # Build and run every source test via node --test
+npm test            # Build both trees and run every source test via node --test
 npm run smoke       # Run a real CLI smoke against fixture
 npm run package:smoke  # Preview the npm package contents
 npm run release:check  # Run all checks and package smoke in sequence
@@ -209,6 +210,21 @@ npm run release:check
 test has a compiled test before running the complete inventory. `npm run
 release:check` is the CI entry point and runs every command above, including
 lint.
+
+### Packaging and dist policy
+
+- `dist/` and `.test-build/` are generated output and are never committed.
+  `dist/` holds only runtime modules (the `bin` and `main` targets live
+  there), while compiled tests go to the separate, ignored `.test-build/`
+  tree so they cannot leak into a publish.
+- The packed tarball ships the built `dist/` plus README, LICENSE, security,
+  changelog, contributing, docs, examples, fixtures, and demo scripts — and
+  nothing build-only. `npm run package:smoke` fails if any packed path
+  contains `__tests__` or ends in `.map`, and it installs the tarball to
+  verify the CLI actually runs from it.
+- `package.json` must declare each top-level key exactly once; `npm run
+  package:contract` scans the raw manifest and rejects duplicates such as
+  the doubled `repository` field that shipped in 0.1.0.
 
 ## Publishing releases
 

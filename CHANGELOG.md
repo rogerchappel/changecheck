@@ -4,6 +4,15 @@
 
 - Report a deterministic error when a present release-notes file has no valid
   SemVer release/version heading, without changing optional-file precedence.
+- Keep compiled test suites out of `dist/` by building them into a separate
+  ignored `.test-build/` tree, so the published tarball ships only runtime
+  modules; `package:smoke` now rejects any packed `__tests__` or source-map
+  entry.
+- Stop tracking generated `dist/` output; `.gitignore` is authoritative and
+  CI rebuilds from source.
+- Declare `repository` exactly once in `package.json` and extend the package
+  contract to reject any duplicate top-level manifest key.
+- Document the packaging and dist policy in README and CONTRIBUTING.
 
 All notable changes to this project will be documented in this file.
 
