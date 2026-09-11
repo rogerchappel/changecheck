@@ -29,7 +29,7 @@ export async function compiledTestInventory(sourceDirectory, compiledDirectory) 
 export async function runTestSuite(projectRoot) {
   const tests = await compiledTestInventory(
     resolve(projectRoot, 'src/__tests__'),
-    resolve(projectRoot, 'dist/__tests__'),
+    resolve(projectRoot, '.test-build/__tests__'),
   );
   const result = spawnSync(process.execPath, ['--test', ...tests], { stdio: 'inherit' });
   if (result.error) throw result.error;
