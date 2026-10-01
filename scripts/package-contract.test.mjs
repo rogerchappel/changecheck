@@ -53,3 +53,20 @@ test('ignores nested keys, escaped quotes, and colons inside strings', () => {
 
   assert.deepEqual(findDuplicateTopLevelKeys(tricky), []);
 });
+
+test('accepts valid compound and caret Node engine ranges', () => {
+  for (const range of ['>=20 <23', '^20']) {
+    const rangedPackage = { ...pkg, engines: { node: range } };
+    const rangedLockfile = structuredClone(lockfile);
+    rangedLockfile.packages[''].engines.node = range;
+    assert.deepEqual(validatePackageContract(rangedPackage, rangedLockfile), []);
+  }
+});
+
+test('rejects a Node engine range whose minimum is below dependencies', () => {
+  const rangedPackage = { ...pkg, engines: { node: '>=18 <23' } };
+  const rangedLockfile = structuredClone(lockfile);
+  rangedLockfile.packages[''].engines.node = '>=18 <23';
+  assert.ok(validatePackageContract(rangedPackage, rangedLockfile)
+    .some((error) => error.includes('commander >=20')));
+});

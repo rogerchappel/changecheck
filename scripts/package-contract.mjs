@@ -1,10 +1,11 @@
 import { readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import semver from 'semver';
 
 function minimumNodeMajor(range) {
-  const match = /^>=(\d+)(?:\.\d+){0,2}$/.exec(range);
-  if (!match) throw new Error(`unsupported Node engine range: ${range}`);
-  return Number(match[1]);
+  const minimum = semver.minVersion(range);
+  if (!minimum) throw new Error(`unsupported Node engine range: ${range}`);
+  return minimum.major;
 }
 
 export function validatePackageContract(pkg, lockfile) {
