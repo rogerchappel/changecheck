@@ -120,7 +120,7 @@ run_package_script() {
   esac
 }
 
-printf 'Checking /tmp/changecheck required files...\n'
+printf 'Checking changecheck required files...\n'
 
 check_file "README.md"
 check_file "AGENTS.md"
@@ -129,7 +129,7 @@ check_file "SECURITY.md"
 check_file ".github/pull_request_template.md"
 check_file "scripts/validate.sh"
 
-printf '\nChecking /tmp/changecheck required directories...\n'
+printf '\nChecking changecheck required directories...\n'
 
 check_dir ".github"
 check_dir "docs"
