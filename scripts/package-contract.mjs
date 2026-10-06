@@ -1,6 +1,11 @@
-import { readFile } from 'node:fs/promises';
+import { readFile, rm } from 'node:fs/promises';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import semver from 'semver';
+import { execFile } from 'node:child_process';
+import { promisify } from 'node:util';
+
+const execFileAsync = promisify(execFile);
 
 function minimumNodeMajor(range) {
   const minimum = semver.minVersion(range);
@@ -77,7 +82,7 @@ export function findDuplicateTopLevelKeys(rawManifest) {
   return [...counts.entries()].filter(([, n]) => n > 1).map(([key]) => key).sort();
 }
 
-export async function checkPackageContract(root = process.cwd()) {
+export async function checkPackageContract(root = process.cwd(), { pack = runPack, validatePack } = {}) {
   const rawManifest = await readFile(`${root}/package.json`, 'utf8');
   const [pkg, lockfile] = await Promise.all([
     Promise.resolve(JSON.parse(rawManifest)),
@@ -89,6 +94,21 @@ export async function checkPackageContract(root = process.cwd()) {
     errors.push(`package.json declares duplicate top-level keys: ${duplicates.join(', ')}`);
   }
   if (errors.length) throw new Error(`Package contract failed:\n- ${errors.join('\n- ')}`);
+
+  let filename;
+  try {
+    ({ filename } = await pack(root));
+    if (!filename) throw new Error('npm pack did not report a package tarball');
+    await (validatePack ?? pack.validate)?.(filename);
+  } finally {
+    if (filename) await rm(join(root, filename), { force: true });
+  }
+}
+
+async function runPack(root) {
+  const { stdout } = await execFileAsync('npm', ['pack', '--json'], { cwd: root });
+  const [result] = JSON.parse(stdout);
+  return result ?? {};
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
