@@ -1,13 +1,34 @@
 import assert from 'node:assert/strict';
-import { readFile } from 'node:fs/promises';
+import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import test from 'node:test';
-import { findDuplicateTopLevelKeys, validatePackageContract } from './package-contract.mjs';
+import { checkPackageContract, findDuplicateTopLevelKeys, validatePackageContract } from './package-contract.mjs';
 
 const pkg = JSON.parse(await readFile(new URL('../package.json', import.meta.url), 'utf8'));
 const lockfile = JSON.parse(await readFile(new URL('../package-lock.json', import.meta.url), 'utf8'));
 
 test('checked-in package runtime contract is valid', () => {
   assert.deepEqual(validatePackageContract(pkg, lockfile), []);
+});
+
+test('cleans the packed tarball when a post-pack contract step fails', async () => {
+  const root = await mkdtemp(join(tmpdir(), 'changecheck-package-contract-'));
+  const filename = 'fixture.tgz';
+  try {
+    await writeFile(join(root, 'package.json'), JSON.stringify(pkg));
+    await writeFile(join(root, 'package-lock.json'), JSON.stringify(lockfile));
+    await assert.rejects(checkPackageContract(root, {
+      pack: async () => {
+        await writeFile(join(root, filename), 'fixture');
+        return { filename };
+      },
+      validatePack: async () => { throw new Error('post-pack contract step'); },
+    }), /post-pack contract step/);
+    assert.equal((await import('node:fs')).existsSync(join(root, filename)), false);
+  } finally {
+    await rm(root, { recursive: true, force: true });
+  }
 });
 
 test('rejects a root Node engine below a runtime dependency minimum', () => {
